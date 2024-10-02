@@ -3,59 +3,50 @@ function displayTemperature(response) {
   //check this before continuing console.log(response.data);
   let temperatureC = Math.round(response.data.temperature.current);
   let cityElement = document.querySelector("#current-city");
-  cityElement.innerHTML = response.data.city;
   let spanElement = document.querySelector("#Current-Temp-Val");
+  let descriptionElement = document.querySelector("#description");
+  let humidityElement = document.querySelector("#humidity");
+  let windSpeedElement = document.querySelector("#wind-speed");
+  let timeElement = document.querySelector("#current-date");
+  let date = new Date(response.data.time * 1000);
 
+  console.log(response.data);
+
+  cityElement.innerHTML = response.data.city;
   spanElement.innerHTML = temperatureC;
-}
-
-function search(event) {
-  event.preventDefault();
-  let searchInputElement = document.querySelector("#search-input");
-
-  //create API apiUrl
-  let city = searchInputElement.value;
-  let apiKey = "ob5474093057904ab71326c9aft2b523";
-  let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=imperial`;
-  //first check the URL is correct and giving you the data you want
-  console.log(apiUrl);
-
-  axios.get(apiUrl).then(displayTemperature);
-
-  //Display temperature
+  descriptionElement.innerHTML = response.data.condition.description;
+  humidityElement.innerHTML = response.data.temperature.humidity;
+  windSpeedElement.innerHTML = response.data.wind.speed;
+  timeElement.innerHTML = formatDate(date);
 }
 
 function formatDate(date) {
   let minutes = date.getMinutes();
   let hours = date.getHours();
-  let day = date.getDay();
+  let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  let day = days[date.getDay()];
 
   if (minutes < 10) {
     minutes = `0${minutes}`;
   }
 
-  if (hours < 10) {
-    hours = `0${hours}`;
-  }
+  return `${day} ${hours}:${minutes}`;
+}
 
-  let days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
+function searchCity(city) {
+  let apiKey = "ob5474093057904ab71326c9aft2b523";
+  let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=imperial`;
+  axios.get(apiUrl).then(displayTemperature);
+}
 
-  let formattedDay = days[day];
-  return `${formattedDay} ${hours}:${minutes}`;
+function handleSearchSubmit(event) {
+  event.preventDefault();
+  let searchInputElement = document.querySelector("#search-input");
+
+  searchCity(searchInputElement.value);
 }
 
 let searchForm = document.querySelector("#search-form");
-searchForm.addEventListener("submit", search);
+searchForm.addEventListener("submit", handleSearchSubmit);
 
-let currentDateELement = document.querySelector("#current-date");
-let currentDate = new Date();
-
-currentDateELement.innerHTML = formatDate(currentDate);
+searchCity("Los Angeles");
