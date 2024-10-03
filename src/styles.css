@@ -46,6 +46,31 @@ main {
   padding: 30px 0;
 }
 
+.weather-forecast-date {
+  text-align: center;
+  font-size: 20px;
+  line-height: 20px;
+  color: rgba(39, 33, 66, 0.4);
+  margin-bottom: 10px;
+}
+
+.weather-forecast-icon {
+  text-align: center;
+  font-size: 38px;
+}
+
+.weather-forecast-temperatures {
+  text-align: center;
+  font-size: 22px;
+  color: #5c574b;
+  display: flex;
+  justify-content: center;
+}
+
+.weather-forecast-temperature {
+  padding: 0 10px;
+}
+
 .current-temperature {
   font-size: 48px;
   display: flex;
