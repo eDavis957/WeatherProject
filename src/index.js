@@ -11,8 +11,6 @@ function displayTemperature(response) {
   let date = new Date(response.data.time * 1000);
   let iconElement = document.querySelector("#icon");
 
-  console.log(response.data);
-
   cityElement.innerHTML = response.data.city;
   spanElement.innerHTML = temperatureC;
   descriptionElement.innerHTML = response.data.condition.description;
@@ -50,42 +48,49 @@ function handleSearchSubmit(event) {
   searchCity(searchInputElement.value);
 }
 
+function formatDay(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fr", "Sat"];
+
+  return days[date.getDay()];
+}
+
 function getForecast(city) {
   let apiKey = "ob5474093057904ab71326c9aft2b523";
-  let apiUrl = `https://api.shecodes.io/weather/v1/forecast?query={city}&key=${apiKey}&units=imperial`;
+  let apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${apiKey}&units=imperial`;
   axios(apiUrl).then(displayForecast);
 }
 
 function displayForecast(response) {
-  console.log(response);
-  let forecastElement = document.querySelector("#forecast");
-
-  let days = ["Tue", "Wed", "Thu", "Fr", "Sat"];
   let forecastHTML = "";
 
-  days.forEach(function (day) {
-    forecastHTML =
-      forecastHTML +
-      `
+  response.data.daily.forEach(function (day, index) {
+    if (index < 5) {
+      forecastHTML =
+        forecastHTML +
+        `
   <div class="weather-forecast-day"> 
-    <div class="weather-forecast-date">${day}</div> 
-    <div class="weather-forecast-icon">☀️</div> 
+    <div class="weather-forecast-date">${formatDay(day.time)}</div> 
+
+    <img src="${day.condition.icon_url}" class="weather-forecast-icon" />
     <div class="weather-forecast-temperatures"> 
       <div class="weather-forecast-temperature"> 
-        <strong>15°</strong> 
+        <strong>${Math.round(day.temperature.maximum)}°</strong> 
       </div> 
-      <div class="weather-forecast-temperature">9°</div>
+      <div class="weather-forecast-temperature">${Math.round(
+        day.temperature.minimum
+      )}°</div>
     </div>
   </div>
   `;
+    }
   });
 
+  let forecastElement = document.querySelector("#forecast");
   forecastElement.innerHTML = forecastHTML;
 }
 
 let searchForm = document.querySelector("#search-form");
 searchForm.addEventListener("submit", handleSearchSubmit);
 
-searchCity("Los Angeles");
-
-displayForecast();
+searchCity("Paris");

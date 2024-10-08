@@ -46,6 +46,12 @@ main {
   padding: 30px 0;
 }
 
+.weather-forecast {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+}
+
 .weather-forecast-date {
   text-align: center;
   font-size: 20px;
@@ -55,8 +61,7 @@ main {
 }
 
 .weather-forecast-icon {
-  text-align: center;
-  font-size: 38px;
+  width: 50px;
 }
 
 .weather-forecast-temperatures {
@@ -65,6 +70,7 @@ main {
   color: #5c574b;
   display: flex;
   justify-content: center;
+  margin-top: 10px;
 }
 
 .weather-forecast-temperature {
